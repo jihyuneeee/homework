@@ -53,9 +53,9 @@ spring:
     activate:
       on-profile: production_database
   datasource:
-    url: jdbc:mysql://localhost:3306/prod
+    url: jdbc:mysql://database-1.cwctahfsfhgo.ap-northeast-1.rds.amazonaws.com/database
     username: admin
-    password: ENC(vSpxksB2NjXRraSwGrLNi1DjiDO5fQ/I)
+    password: rroot+!#$
     driver-class-name: com.mysql.cj.jdbc.Driver
 server:
   port: 9000

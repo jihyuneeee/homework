@@ -10,11 +10,20 @@ import lombok.RequiredArgsConstructor;
 @Repository
 @RequiredArgsConstructor
 public class TravelRepository {
-    
+
     private final EntityManager em;
 
     public void save(Travel travel) {
         em.persist(travel);
     }
-    
+
+    public Long delete(Travel travel) {
+        em.remove(travel);
+        return travel.getId();
+    }
+
+    public Travel findOne(Long id) {
+        return em.find(Travel.class, id);
+    }
+
 }

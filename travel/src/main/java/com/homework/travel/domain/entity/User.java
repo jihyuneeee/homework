@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +19,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @Table(name = "users")
 public class User {
 
@@ -28,7 +31,7 @@ public class User {
 
     @Column(nullable = false)
     private String username;
-    
+
     @OneToMany(mappedBy = "user")
     private List<Travel> travels = new ArrayList<>();
 
