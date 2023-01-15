@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,11 +16,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.homework.travel.domain.entity.City;
+import com.homework.travel.domain.entity.Travel;
+import com.homework.travel.repository.TravelRepository;
 import com.homework.travel.service.CityService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import static java.util.stream.Collectors.toList;
 
 @RestController
 public class CityApiController {
@@ -26,6 +31,7 @@ public class CityApiController {
     @Autowired
     CityService cityService;
 
+    
     /**
      * 도시 등록 API
      */
@@ -69,10 +75,55 @@ public class CityApiController {
 
     }
 
+    /**
+     * 도시 삭제 API
+     * @param id
+     */
     @DeleteMapping("/api/city/{id}")
     public void deleteCity(@PathVariable("id") Long id) {
         cityService.deleteCity(id);
 
+    }
+
+    /**
+     * 사용자별 도시 목록 조회 API
+     */
+    @GetMapping("/api/city/list/{id}")
+    public List<CityListDto> selectCityList(@PathVariable("id") Long id){
+
+        // 1. 여행 중인 도시 조회
+        List<Travel> city = cityService.findTravelingCityWithUserId(id);
+        
+        // 2. 나머지 도시 조회 
+        List<City> city2 = cityService.findOtherCityWithUserId(id); 
+
+        List<CityListDto> result = city.stream()
+                                    .map(o -> new CityListDto(o))
+                                    .collect(toList());
+
+ 
+        result.addAll(city2.stream()
+                            .map(o -> new CityListDto(o))
+                            .collect(Collectors.toList()));    
+
+        return result;
+
+    }
+
+    @Data
+    static class CityListDto{
+        private Long city_id;
+        private String cityname;
+
+        public CityListDto(Travel o) {
+            city_id = o.getCity().getId();
+            cityname = o.getCity().getCityname();
+        }
+
+        public CityListDto(City o){
+            city_id = o.getId();
+            cityname = o.getCityname();
+        }
     }
 
     @Data

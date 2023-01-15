@@ -8,7 +8,7 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "com.homework.travel.TravelApplication",
             "projectName": "travel",
-            "args": "--spring.profiles.active=development",
+            "args": "--spring.profiles.active=production",
             "envFile": "${workspaceFolder}/.env"
         }
     ]
